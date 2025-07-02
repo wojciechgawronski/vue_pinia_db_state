@@ -11,9 +11,13 @@
   </header>
   <div>
       <div class="task-list">
-        <div v-if="filter === 'all'">
+        <div>
+
           <h2>All tasks: </h2>
           <p>Favs: {{ taskStore.favCount }}, total: {{ taskStore.totalCount }}</p>
+          <task-form />
+        </div>
+        <div v-if="filter === 'all'">
           <div v-for="task in taskStore.tasks" :key="task.id">
             <task-details :task="task" />
           </div>
@@ -30,6 +34,7 @@
 
 <script setup lang="ts">
   import { useTaskStore } from './stores/TaskStore';
+  import TaskForm from './components/TaskForm.vue';
   import TaskDetails from './components/TaskDetails.vue';
   import { ref } from 'vue';
   // import { RouterLink, RouterView } from 'vue-router'

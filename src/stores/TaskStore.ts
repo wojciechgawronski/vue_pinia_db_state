@@ -1,5 +1,13 @@
 import { defineStore } from 'pinia';
 
+export interface Task { // dodano export interfejsu tak 
+  id: number;
+  title: string;
+  isFave: boolean;
+  description: string;
+  completed: boolean;
+}
+
 export const useTaskStore = defineStore('taskStore', {
   state: () => ({
     tasks: [
@@ -24,7 +32,7 @@ export const useTaskStore = defineStore('taskStore', {
             description: 'Description for Task 3',
             completed: false
         }
-    ],
+    ] as Task[], // tak, by ts znał typ tablicy
     name: 'woj gaw',
   }),
   getters: {
@@ -36,6 +44,20 @@ export const useTaskStore = defineStore('taskStore', {
     },
     totalCount: (state) => {
       return state.tasks.length;
+    }
+  },
+  actions: {
+    addTask(task: Task){
+      this.tasks.push(task)
+    },
+    deleteTask(id: number){
+      this.tasks = this.tasks.filter(task => task.id !== id)
+    },
+    toggleFav(id: number){
+      const task = this.tasks.find(task => task.id === id);
+      if (task) {
+        task.isFave = !task.isFave;
+      }
     }
   }
 });
