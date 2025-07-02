@@ -35,9 +35,8 @@
   const handleSubmit = () => {
     if (newTask.value.length > 0) {
       taskStore.addTask({
-        id: Math.floor(Math.random() * 1000), // Random ID for simplicity
         title: newTask.value,
-        isFave: isFave || false,
+        isFave: isFave.value,
         description: '',
         completed: false
       });

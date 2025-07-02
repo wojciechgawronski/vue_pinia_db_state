@@ -39,17 +39,23 @@ export const useTaskStore = defineStore('taskStore', {
       this.isLoading = false;
     },
     async addTask(task: Task){
-      this.tasks.push(task);
-
-      const res = await fetch('http://localhost:3000/tasks', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(task)
-      });
-
-      if (!res.ok) throw new Error('Network response was not ok');
+      this.isLoading = true;
+        try {
+          const res = await fetch('http://localhost:3000/tasks', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(task)
+        });
+        const newTask = await res.json();
+        this.tasks.push(task);
+      } catch (error) {
+        console.error('Error adding task:', error);
+      }
+      finally {
+        this.isLoading = false;
+      }
     },
 
     async deleteTask(id: number){
