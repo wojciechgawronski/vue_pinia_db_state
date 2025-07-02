@@ -10,30 +10,9 @@ export interface Task { // dodano export interfejsu tak
 
 export const useTaskStore = defineStore('taskStore', {
   state: () => ({
-    tasks: [
-        {
-            id: 1,
-            title: 'Task 1',
-            isFave: false,
-            description: 'Description for Task 1',
-            completed: false
-        },
-        {
-            id: 2,
-            title: 'Task 2',
-            isFave: false,
-            description: 'Description for Task 2',
-            completed: true
-        },
-        {
-            id: 3,
-            title: 'Task 3',
-            isFave: true,
-            description: 'Description for Task 3',
-            completed: false
-        }
-    ] as Task[], // tak, by ts znał typ tablicy
+    tasks: [] as Task[], // tak, by ts znał typ tablicy
     name: 'woj gaw',
+    isLoading: false,
   }),
   getters: {
     favs: (state) => {
@@ -47,17 +26,55 @@ export const useTaskStore = defineStore('taskStore', {
     }
   },
   actions: {
-    addTask(task: Task){
-      this.tasks.push(task)
+    async getTasks(){
+      this.isLoading = true;
+      // try catch ? 
+      
+      const res = await fetch('http://localhost:3000/tasks');
+      // console.log(res);
+      if (!res.ok) throw new Error('Network response was not ok');
+      const data = await res.json();
+      
+      this.tasks = data;
+      this.isLoading = false;
     },
-    deleteTask(id: number){
-      this.tasks = this.tasks.filter(task => task.id !== id)
+    async addTask(task: Task){
+      this.tasks.push(task);
+
+      const res = await fetch('http://localhost:3000/tasks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(task)
+      });
+
+      if (!res.ok) throw new Error('Network response was not ok');
     },
-    toggleFav(id: number){
+
+    async deleteTask(id: number){
+      this.tasks = this.tasks.filter(task => task.id !== id);
+
+      const res = await fetch('http://localhost:3000/tasks/'+id, {
+        method: 'DELETE',
+      });
+
+      if (!res.ok) throw new Error('Network response was not ok');
+
+    },
+    async toggleFav(id: number){
       const task = this.tasks.find(task => task.id === id);
       if (task) {
         task.isFave = !task.isFave;
       }
+
+      const res = await fetch('http://localhost:3000/tasks/'+id, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ isFave: task?.isFave })
+      });
     }
   }
 });

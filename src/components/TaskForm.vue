@@ -41,6 +41,8 @@
         description: '',
         completed: false
       });
+      newTask.value = '';
+      isFave.value = false;
     }
   }
 

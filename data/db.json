@@ -1,0 +1,25 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Task 1",
+      "isFave": false,
+      "description": "Description for Task 1",
+      "completed": false
+    },
+    {
+      "id": 2,
+      "title": "Task 2",
+      "isFave": false,
+      "description": "Description for Task 2",
+      "completed": true
+    },
+    {
+      "id": 3,
+      "title": "Task 3",
+      "isFave": true,
+      "description": "Description for Task 3",
+      "completed": false
+    }
+  ]
+}
